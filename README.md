@@ -4,6 +4,7 @@
 Pytorch Implementation of MuZero for OpenAI gym environment. It should support any &lt;Discrete> or &lt;Box> configuration for the observation space and action space. You will have to change the game in config, choice between a RGB observation(vision_model) or Game state(mlp_model) as observation and find the best hyperparameter <br />
 <br />
 I try to document the code as much as possible next to the muzero paper: https://arxiv.org/abs/1911.08265 <br />
+(Two approach : self explain variable and code comment)
 <br />
 ## Dependency
 
@@ -12,9 +13,8 @@ https://github.com/DHDev0/Muzero/blob/main/tutorial.ipynb
 
 ## Jupyter
 
-For example you can use the tutorial.ipynb ( the step for the Dependency/Lib to use Muzero are in it ) <br />
+For example you can use the tutorial.ipynb.
 https://github.com/DHDev0/Muzero/blob/main/tutorial.ipynb <br />
-(Two approach : self explain variable and code comment)
 
 ## CLI
 
