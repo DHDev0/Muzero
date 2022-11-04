@@ -1,13 +1,17 @@
-# Muzero
+
+## Features
 Pytorch Implementation of MuZero for OpenAI gym environment. It should support any &lt;Discrete> or &lt;Box> configuration for the observation space and action space. You just have to change the game and find the best hyperparameter <br />
 <br />
 I try to document the code as much as possible next to the muzero paper: https://arxiv.org/abs/1911.08265 <br />
 <br />
+## Jupyter
+<br />
 For example you can use the tutorial.ipynb ( the step for the Dependency/Lib to use Muzero are in it ) <br />
+[https://github.com/DHDev0/Muzero/blob/main/tutorial.ipynb] <br />
 <br />
-or<br />
+## CLI example
 <br />
-CLI with your config file (a cartpole example is available in config folder) : <br />
+Set your config file (example): [https://github.com/DHDev0/Muzero/blob/main/config/]<br />
 <br />
 Training : <br />
 ```
@@ -35,3 +39,7 @@ python muzero_cli.py play config/cli_cartpole_config.json
 * [ ] Two player mode and more
 * [ ] Board and atari configuration for muzero base on the paper hyperparameter<br />
 * [ ] Multi CPU/GPU and cloud remote compute for aws, google cloud and azure with cluster<br />
+
+## Subjects
+
+Machine Learning
