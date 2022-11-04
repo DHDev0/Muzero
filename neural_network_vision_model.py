@@ -276,7 +276,6 @@ class Prediction_function(torch.nn.Module):
                                                            sequence_layer_recursive + \
                                                            sequence_layer_out) )
                         
-        # self.fc_policy = mlp(self.block_output_size_policy,fc_policy_layers,action_space_size,)
         sequence_layer_init = [nn.Linear(block_output_size_policy, hidden_layer_dimensions),
                         activation]
         sequence_layer_recursive = [nn.Linear(hidden_layer_dimensions, hidden_layer_dimensions),
