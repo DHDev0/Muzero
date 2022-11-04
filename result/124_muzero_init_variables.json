@@ -1,0 +1,1 @@
+{"observation_space_dimensions": 4, "action_space_dimensions": 2, "state_space_dimensions": 10, "hidden_layer_dimensions": 256, "number_of_hidden_layer": 5, "k_hypothetical_steps": 10, "learning_rate": 0.01, "num_of_epoch": 10000, "device": "cpu", "random_tag": 124, "action_map": [0, 1], "model_structure": "mlp_model"}
