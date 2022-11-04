@@ -23,15 +23,15 @@ python muzero_cli.py play config/cli_cartpole_config.json
 
 ## Features
 
-* [x] Residual Network  
-* [x] Fully connected network in [PyTorch](https://github.com/pytorch/pytorch)
+* [x] Residual Network for RGB observation using render.
+* [x] Fully connected network for game state observation.
 * [x] Model weights automatically saved at checkpoints
-* [x] Commented and 
-* [x] Work for any gym environments/games (continous , discrete or any combinaison of the two for action and observation space)
-* [x] Tutorial
-* [x] Pretrained weights
-* [x] Support : Windows , Linux , MacOS
-* [x] Single player mode
+* [x] Commented with link/page to the paper.
+* [x] Work for any gym environments/games. (continous , discrete or any combinaison of the two for action and observation space)
+* [x] Tutorial.
+* [x] Pretrained weights.
+* [x] Support : Windows , Linux , MacOS.
+* [x] Single player mode.
 * [ ] Two player mode and more
 * [ ] Need to add a board and atari configuration for muzero base on the paper hyperparameter<br />
 * [ ] Need to add multi CPU/GPU and cloud remote compute for aws, google cloud and azure with cluster<br />
