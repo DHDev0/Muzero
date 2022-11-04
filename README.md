@@ -5,12 +5,12 @@ Pytorch Implementation of MuZero for OpenAI gym environment. It should support a
 I try to document the code as much as possible next to the muzero paper: https://arxiv.org/abs/1911.08265 <br />
 <br />
 ## Jupyter
-<br />
+
 For example you can use the tutorial.ipynb ( the step for the Dependency/Lib to use Muzero are in it ) <br />
 [https://github.com/DHDev0/Muzero/blob/main/tutorial.ipynb] <br />
-<br />
+
 ## CLI example
-<br />
+
 Set your config file (example): [https://github.com/DHDev0/Muzero/blob/main/config/]<br />
 <br />
 Training : <br />
