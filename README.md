@@ -43,6 +43,7 @@ python muzero_cli.py play config/cli_cartpole_config.json
 * [x] Pretrained weights for cartpole.
 * [x] Support : Windows , Linux , MacOS.
 * [x] Single player mode.
+* [ ] Training / Inference report
 * [ ] Two player mode and more
 * [ ] Board and atari configuration for muzero base on the paper hyperparameter<br />
 * [ ] Multi CPU/GPU and cloud remote compute for aws, google cloud and azure with cluster<br />
