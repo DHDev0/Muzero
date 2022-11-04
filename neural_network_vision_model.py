@@ -72,8 +72,8 @@ class Residual_block(nn.Module): #resnetV2
         
         sequence = first_layer_sequence + (recursive_layer_sequence*1)
         
-        self.sequential_container = nn.Sequential(*tuple(sequence))  # # # combine layers
-        self.last_layer = activation  # # # last layer
+        self.sequential_container = nn.Sequential(*tuple(sequence))  
+        self.last_layer = activation 
 
     def forward(self, state):
         x = self.sequential_container(state)
@@ -212,7 +212,7 @@ class Dynamics__function(torch.nn.Module):
                                                             sequence_layer_recursive + \
                                                                 sequence_layer_out) )
         
-        flatten = torch.nn.Flatten(1,-1) # or x.view(-1, self.block_output_size_reward)        
+        flatten = torch.nn.Flatten(1,-1)        
         
         sequence = [
                     convolution,
@@ -260,8 +260,8 @@ class Prediction_function(torch.nn.Module):
             else (reduced_channels_policy * observation_space_dimensions[2] * observation_space_dimensions[1] * observation_space_dimensions[0]))
         
         resblock = Residual_block(num_channels)
-        convolution_value = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 # reduced_channels_value for second arg
-        convolution_policy = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 # reduced_channels_policy for second arg
+        convolution_value = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 
+        convolution_policy = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 
         
         flatten = torch.nn.Flatten(1,-1)
         activation = torch.nn.ReLU()
@@ -301,15 +301,11 @@ class Prediction_function(torch.nn.Module):
         self.nn_policy = nn.Sequential(*tuple(sequence_3))
         
     def forward(self, state_normalize):
-        # print("Prediction function input: ",state_normalize.size() )
         resnet_state_normalize = self.resnet(state_normalize)
-        # print("Prediction function resnet: ", resnet_state_normalize.size())
         value = self.nn_value(resnet_state_normalize)
-        # print("Prediction function value: ", value.size())
         policy = self.nn_policy(resnet_state_normalize)
-        # print("Prediction function policy: ",policy.size() )
         return policy , value
-#|||||||||| MAKE BATCH BY NUMBER OF PACK IMAGE FOR TRAINING ( check the paper if it's not just windows size)
+
 
 
 # # # L1 Regularization
