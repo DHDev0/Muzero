@@ -10,7 +10,7 @@ I try to document the code as much as possible next to the muzero paper: https:/
 For example you can use the tutorial.ipynb ( the step for the Dependency/Lib to use Muzero are in it ) <br />
 [https://github.com/DHDev0/Muzero/blob/main/tutorial.ipynb] <br />
 
-## CLI example
+## CLI
 
 Set your config file (example): [https://github.com/DHDev0/Muzero/blob/main/config/]<br />
 <br />
