@@ -33,5 +33,5 @@ python muzero_cli.py play config/cli_cartpole_config.json
 * [x] Support : Windows , Linux , MacOS.
 * [x] Single player mode.
 * [ ] Two player mode and more
-* [ ] Need to add a board and atari configuration for muzero base on the paper hyperparameter<br />
-* [ ] Need to add multi CPU/GPU and cloud remote compute for aws, google cloud and azure with cluster<br />
+* [ ] Board and atari configuration for muzero base on the paper hyperparameter<br />
+* [ ] Multi CPU/GPU and cloud remote compute for aws, google cloud and azure with cluster<br />
