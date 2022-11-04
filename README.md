@@ -1,5 +1,6 @@
 
-## Features
+## Muzero
+
 Pytorch Implementation of MuZero for OpenAI gym environment. It should support any &lt;Discrete> or &lt;Box> configuration for the observation space and action space. You just have to change the game and find the best hyperparameter <br />
 <br />
 I try to document the code as much as possible next to the muzero paper: https://arxiv.org/abs/1911.08265 <br />
