@@ -30,11 +30,11 @@ python muzero_cli.py play config/cli_cartpole_config.json
 
 * [x] Residual Network for RGB observation using render.
 * [x] Fully connected network for game state observation.
-* [x] Model weights automatically saved at checkpoints
+* [x] Model weights automatically saved at best selfplay reward.
 * [x] Commented with link/page to the paper.
 * [x] Work for any gym environments/games. (continous , discrete or any combinaison of the two for action and observation space)
-* [x] Tutorial.
-* [x] Pretrained weights.
+* [x] Tutorial with jupyter notebook.
+* [x] Pretrained weights for cartpole.
 * [x] Support : Windows , Linux , MacOS.
 * [x] Single player mode.
 * [ ] Two player mode and more
