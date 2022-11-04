@@ -21,6 +21,17 @@ cd \to\project\folder
 python muzero_cli.py play config/cli_cartpole_config.json
 ```
 
+## Features
 
-|X| TODO: Need to add a board and atari configuration for muzero base on the paper hyperparameter<br />
-|X| TODO: Need to add multi CPU/GPU and cloud remote compute for aws, google cloud and azure with cluster<br />
+* [x] Residual Network  
+* [x] Fully connected network in [PyTorch](https://github.com/pytorch/pytorch)
+* [x] Model weights automatically saved at checkpoints
+* [x] Commented and 
+* [x] Work for any gym environments/games (continous , discrete or any combinaison of the two for action and observation space)
+* [x] Tutorial
+* [x] Pretrained weights
+* [x] Support : Windows , Linux , MacOS
+* [x] Single player mode
+* [ ] Two player mode and more
+* [ ] Need to add a board and atari configuration for muzero base on the paper hyperparameter<br />
+* [ ] Need to add multi CPU/GPU and cloud remote compute for aws, google cloud and azure with cluster<br />
