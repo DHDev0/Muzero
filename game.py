@@ -116,7 +116,7 @@ class Game():
             selected_action = np.random.choice(action, p=policy)
         
         # save/record the policy during self_play
-        with open(f'res/softmax_model_policy_printed.txt', "a+") as f:
+        with open(f'result/softmax_model_policy_printed.txt', "a+") as f:
             print(selected_action,policy, file=f)
 
         # # # return one hot encoded action from the discrete action
