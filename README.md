@@ -1,7 +1,5 @@
 ** issue with deep.copy(environment) it keep the random seed to 0, so same origin. (will be fix with next update)
 
-Update on Friday 9 /12/2022
-
 ## Muzero
 
 Pytorch Implementation of MuZero for OpenAI gym environment. It should support any &lt;Discrete> or &lt;Box> configuration for the observation space and action space. You will have to change the game in config, choice between a RGB observation(vision_model) or Game state(mlp_model) as observation and find the best hyperparameter <br />
