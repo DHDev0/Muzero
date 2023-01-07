@@ -1,10 +1,11 @@
+
 import torch
 import torch.nn as nn
 
 
 
 # # # # https://www.researchgate.net/figure/A-comparison-between-ResNet-v1-and-ResNet-v2-on-residual-blocks-23_fig2_342334669
-# class Residual_block(nn.Module): #ResnetV1
+# class Residual_block(nn.Module): #V1
 #     def __init__(self, num_channels, stride=1):
 #         super().__init__()
 #         activation= nn.LeakyReLU() #, nn.LeakyReLU(), nn.GELU, nn.ReLU(), nn.ELU
@@ -37,7 +38,7 @@ import torch.nn as nn
 #         return self.last_layer(x)
 
 # # # https://www.researchgate.net/figure/A-comparison-between-ResNet-v1-and-ResNet-v2-on-residual-blocks-23_fig2_342334669
-class Residual_block(nn.Module): #resnetV2
+class Residual_block(nn.Module): #V2
     def __init__(self, num_channels, stride=1):
         super().__init__()
         activation= nn.LeakyReLU() #, nn.LeakyReLU(), nn.GELU, nn.ReLU(), nn.ELU
@@ -72,8 +73,8 @@ class Residual_block(nn.Module): #resnetV2
         
         sequence = first_layer_sequence + (recursive_layer_sequence*1)
         
-        self.sequential_container = nn.Sequential(*tuple(sequence))  
-        self.last_layer = activation 
+        self.sequential_container = nn.Sequential(*tuple(sequence))  # # # combine layers
+        self.last_layer = activation  # # # last layer
 
     def forward(self, state):
         x = self.sequential_container(state)
@@ -121,7 +122,7 @@ class Down_sample(torch.nn.Module):
         return x
 
 
-class Representation__function(torch.nn.Module):
+class Representation_function(torch.nn.Module):
     def __init__(self, 
                  observation_space_dimensions, 
                  state_dimension,
@@ -132,7 +133,7 @@ class Representation__function(torch.nn.Module):
                  stacked_observations = 1,
                  down_sampling = True ):
         super().__init__()
-        
+        self.action_space = action_dimension
         self.down_sampling = down_sampling
         stack_observation = observation_space_dimensions[-1]
         downsample_net = Down_sample( stack_observation, num_channels)
@@ -145,33 +146,25 @@ class Representation__function(torch.nn.Module):
 
         sequence_down_samp = [
                               downsample_net
-                             ]  + \
-                             ([resblock] * number_of_hidden_layer) + \
-                             [activation]
+                             ]  + [resblock] 
 
         sequence_conv_norm = [
                               convolution,
                               batchnorm,
                               activation,
-                             ] + \
-                             ([resblock] * number_of_hidden_layer) + \
-                             [activation]
+                             ] + [resblock]
                              
                              
         self.sequential_downsampler = nn.Sequential(*tuple(sequence_down_samp))
         self.sequential_convolution_activation = nn.Sequential(*tuple(sequence_conv_norm))
         
     def forward(self, state):
-        if self.down_sampling:
-            state_normalize = self.sequential_downsampler(state)
-        else:
-            state_normalize = self.sequential_convolution_activation(state)
-        # print(state_normalize.flatten())
+        state_normalize = self.sequential_downsampler(state) if self.down_sampling else self.sequential_convolution_activation(state)
         return state_normalize
 
 
 
-class Dynamics__function(torch.nn.Module):
+class Dynamics_function(torch.nn.Module):
     
     def __init__(self, 
                  state_dimension, 
@@ -195,7 +188,7 @@ class Dynamics__function(torch.nn.Module):
                                      observation_space_dimensions[1] * \
                                      observation_space_dimensions[2]) 
                                    )
-        
+        self.action_space = action_dimension
         dropout1d = nn.Dropout(p=0.5)
         convolution = torch.nn.Conv2d(num_channels + 1, num_channels , kernel_size=3, stride=1, padding=1, bias=False) # 3x3
         batchnorm = torch.nn.BatchNorm2d(num_channels )
@@ -206,13 +199,13 @@ class Dynamics__function(torch.nn.Module):
         sequence_layer_init = [nn.Linear(block_output_size_reward, hidden_layer_dimensions),
                                 activation]
         sequence_layer_recursive = [nn.Linear(hidden_layer_dimensions, hidden_layer_dimensions),
-                                    activation,dropout1d] * number_of_hidden_layer
+                                    activation] * number_of_hidden_layer
         sequence_layer_out = [nn.Linear(hidden_layer_dimensions, state_dimension)]
         multilayer_perceptron_reward = nn.Sequential(*tuple(sequence_layer_init + \
                                                             sequence_layer_recursive + \
                                                                 sequence_layer_out) )
         
-        flatten = torch.nn.Flatten(1,-1)        
+        flatten = torch.nn.Flatten(1,-1) # or x.view(-1, self.block_output_size_reward)        
         
         sequence = [
                     convolution,
@@ -260,8 +253,8 @@ class Prediction_function(torch.nn.Module):
             else (reduced_channels_policy * observation_space_dimensions[2] * observation_space_dimensions[1] * observation_space_dimensions[0]))
         
         resblock = Residual_block(num_channels)
-        convolution_value = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 
-        convolution_policy = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 
+        convolution_value = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 # reduced_channels_value for second arg
+        convolution_policy = torch.nn.Conv2d(num_channels, num_channels, 1) #1x1 # reduced_channels_policy for second arg
         
         flatten = torch.nn.Flatten(1,-1)
         activation = torch.nn.ReLU()
@@ -269,17 +262,18 @@ class Prediction_function(torch.nn.Module):
         sequence_layer_init = [nn.Linear(block_output_size_value, hidden_layer_dimensions),
                                 activation]
         sequence_layer_recursive = [nn.Linear(hidden_layer_dimensions, hidden_layer_dimensions),
-                                    activation,dropout1d] * number_of_hidden_layer
+                                    activation] * number_of_hidden_layer
         sequence_layer_out = [nn.Linear(hidden_layer_dimensions, state_dimension)]
         
         multilayer_perceptron_value = nn.Sequential(*tuple(sequence_layer_init + \
                                                            sequence_layer_recursive + \
                                                            sequence_layer_out) )
                         
+        # self.fc_policy = mlp(self.block_output_size_policy,fc_policy_layers,action_space_size,)
         sequence_layer_init = [nn.Linear(block_output_size_policy, hidden_layer_dimensions),
                         activation]
         sequence_layer_recursive = [nn.Linear(hidden_layer_dimensions, hidden_layer_dimensions),
-                                    activation,dropout1d] * number_of_hidden_layer
+                                    activation] * number_of_hidden_layer
         sequence_layer_out = [nn.Linear(hidden_layer_dimensions, action_dimension)]
         
         multilayer_perceptron_policy = nn.Sequential(*tuple(sequence_layer_init + \
@@ -307,29 +301,5 @@ class Prediction_function(torch.nn.Module):
 
 
 
-# # # L1 Regularization
-# # # Explain at : https://paperswithcode.com/method/l1-regularization
-def l1(models, l1_weight_decay= 0.0001):
-    l1_parameters = []
-    for parameter_1,parameter_2,parameter_3 in zip(models[0].parameters(),models[1].parameters(),models[2].parameters()):
-        l1_parameters.extend((parameter_1.view(-1), parameter_2.view(-1), parameter_3.view(-1)))
-    return l1_weight_decay * torch.abs(torch.cat(l1_parameters)).sum()
 
-
-# # # https://arxiv.org/pdf/1911.08265.pdf [page: 4]
-# # # L2 Regularization manually
-# # # or can be done using weight_decay from ADAM or SGD
-# # # Explain at : https://paperswithcode.com/task/l2-regularization
-def l2(models, l2_weight_decay= 0.0001):
-    l2_parameters = []
-    for parameter_1,parameter_2,parameter_3 in zip(models[0].parameters(),models[1].parameters(),models[2].parameters()):
-        l2_parameters.extend((parameter_1.view(-1), parameter_2.view(-1), parameter_3.view(-1)))
-    return l2_weight_decay * torch.square(torch.cat(l2_parameters)).sum()
-
-def cross_entropy(input, target ):
-    # (-target * torch.nn.LogSoftmax(dim=0)(input)).mean()
-    # (-target * torch.nn.LogSoftmax(dim=0)(input)).sum()
-    # (-torch.sigmoid(target) * torch.nn.LogSoftmax(dim=0)(torch.sigmoid(input))).sum()
-    # (-torch.sigmoid(target) * torch.nn.LogSoftmax(dim=0)(torch.sigmoid(input))).mean()
-    return (-target * torch.nn.LogSoftmax(dim=-1)(input)).sum()
 

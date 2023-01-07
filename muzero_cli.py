@@ -8,21 +8,67 @@ from replay_buffer import *
 from muzero_model import *
 from self_play import *
 
-if __name__ == "__main__":
-    print(sys.argv[:])
-    with open(str(sys.argv[-1]), 'r') as openfile:
-        config = json.load(openfile)
+def main(cli_input):
+    
+################## CLI CHECK COMMAND AND OPEN JSON ##################
+    #lower case cli argument
+    cli_input_to_lower_case = list(map(lambda x: x.lower(), cli_input))
+    # find if one config file has been provide in clie
+    config_directory_and_file =  filter(lambda s: 'config' in s, cli_input)
+    # check if train argument has been provide in the cli command
+    config_mode_train =  filter(lambda s: 'train' in s, cli_input_to_lower_case)
+    # check if play argument has been provide in the cli command
+    config_mode_play =  filter(lambda s: 'play' in s, cli_input_to_lower_case)
+    # check if report argument has been provide in the cli command
+    config_mode_report =  filter(lambda s: 'report' in s, cli_input_to_lower_case)
+    # check if benchmark argument has been provide in the cli command
+    config_mode_benchmark =  filter(lambda s: 'benchmark' in s, cli_input_to_lower_case)
 
-    if str(sys.argv[-2]) == "train":
+    #raise error/explain if config path is not provide
+    if len(config_directory_and_file) == 0 : 
+        raise Exception("Specify a config directory and folder such as: config/config_file.json \
+                         Example : \
+                            python muzero_cli.py train config/config_file.json \
+                            python muzero_cli.py train report config/config_file.json \
+                            python muzero_cli.py train report play config/config_file.json \
+                            python muzero_cli.py train play config/config_file.json \
+                            python muzero_cli.py play config/config_file.json")
+        
+    # raise error/explain if none of the minimal option has been provide
+    if len(config_mode_play + config_mode_train + config_mode_report)  == 0 : 
+        raise Exception("Specify a mode such as : train , train report , play , benchmark or any of this combination \
+                         Example : \
+                            python muzero_cli.py train config/config_file.json \
+                            python muzero_cli.py train report config/config_file.json \
+                            python muzero_cli.py train report play config/config_file.json \
+                            python muzero_cli.py train play config/config_file.json \
+                            python muzero_cli.py play config/config_file.json")
+    
+    # open json config file from provider path. 
+    with open(str(config_directory_and_file[0]), 'r') as openfile:
+        config = json.load(openfile)
+    #json lib already provide error if file not find
+    
+    ##########################################
+    #TYPE USE FOR TRAINING/INFERENCE/BENCHMARK
+    compute_type = torch.float32
+    #TODO EMBED PYTORCH WITH STR OPTION
+    #########################################
+
+################## TRAIN ##################
+    if len(config_mode_train) > 0:
+        print("Start the training cycle...")
         # # # set game environment from gym library
-        env = gym.make(config["game"]["env"]) # 77min to solve carpole
+        # # # render_mode should be set to None if you don't want rgb observation
+        # # # else 'human' or 'rgb_array' depending on  ("human" for atari game)
+        env = gym.make(config["game"]["env"],render_mode=config["game"]["render"]) 
 
         # # # the random seed are set to 0 for reproducibility purpose
         # # # good reference about it at : https://pytorch.org/docs/stable/notes/randomness.html
         np.random.seed(config["random_seed"]["np_random_seed"]) # set the random seed of numpy
         torch.manual_seed(config["random_seed"]["torch_manual_seed"]) # set the random seed of pytorch
-        env.seed(config["random_seed"]["env_seed"]) # set the random seed of gym env
-
+        try : env.seed(config["random_seed"]["env_seed"]) # set the random seed of gym env
+        except: pass
         # # # init/set muzero model for training and inference
         muzero = Muzero(model_structure = config["muzero"]["model_structure"], # 'vision_model' : will use rgb as observation , 'mlp_model' : will use game state as observation
                         observation_space_dimensions = env.observation_space, # dimension of the observation 
@@ -31,10 +77,13 @@ if __name__ == "__main__":
                         hidden_layer_dimensions = config["muzero"]["hidden_layer_dimensions"], # number of weight in the recursive layer of the mlp
                         number_of_hidden_layer = config["muzero"]["number_of_hidden_layer"], # number of recusion layer of hidden layer of the mlp
                         k_hypothetical_steps = config["muzero"]["k_hypothetical_steps"], # number of future step you want to be simulate during train (they are mainly support loss)
+                        optimizer = config["muzero"]["optimizer"],
+                        lr_scheduler = config["muzero"]["lr_scheduler"],
                         learning_rate = config["muzero"]["learning_rate"], # learning rate of the optimizer
+                        loss_type = config["muzero"]["loss_type"],
                         num_of_epoch = config["muzero"]["num_of_epoch"], # number of step during training (the number of step of self play and training can be change)
                         device = config["muzero"]["device"], # device on which you want the comput to be made : "cpu" , "cuda:0" , "cuda:1" , etc
-                        type_format = torch.float32, # choice the dtype of the model. look at [https://pytorch.org/docs/1.8.1/amp.html#ops-that-can-autocast-to-float16]
+                        type_format = compute_type, # choice the dtype of the model. look at [https://pytorch.org/docs/1.8.1/amp.html#ops-that-can-autocast-to-float16]
                         load = config["muzero"]["load"], # function for loading a save model
                         use_amp = config["muzero"]["use_amp"], # use mix precision for gpu (not implement yet)
                         scaler_on = config["muzero"]["scaler_on"], # scale gradient to reduce computation
@@ -58,7 +107,7 @@ if __name__ == "__main__":
 
         # # # ini/set the Game class which embbed the gym game class function
         gameplay = Game(gym_env = env, 
-                        discount = config["gameplay"]["discount"],
+                        discount = config["gameplay"]["discount"], #should be the same discount than mcts
                         limit_of_game_play = config["gameplay"]["limit_of_game_play"], # maximum number of mouve
                         observation_dimension = muzero.observation_dimension, 
                         action_dimension = muzero.action_dimension,
@@ -71,18 +120,30 @@ if __name__ == "__main__":
                                                   number_of_training_before_self_play = config["learning_cycle"]["number_of_training_before_self_play"], # number of epoch made by the model before selplay
                                                   number_of_mcts_simulation = config["learning_cycle"]["number_of_mcts_simulation"], 
                                                   model_tag_number = config["learning_cycle"]["model_tag_number"], # tag number use to generate checkpoint
+                                                  number_of_worker_selfplay = config["learning_cycle"]["number_of_worker_selfplay"],
+                                                  tempererature_type = config["learning_cycle"]["tempererature_type"], # "static_temperature" ,"linear_decrease_temperature" ,  "extreme_temperature" and "reversal_tanh_temperature"
                                                   verbose = config["learning_cycle"]["verbose"], # if you want to print the epoch|reward|loss during train
                                                   muzero_model = muzero,
                                                   gameplay = gameplay,
-                                                  number_of_monte_carlo_tree_search = mcts,
+                                                  monte_carlo_tree_search = mcts,
                                                   replay_buffer = replay_buffer)
+        print("Training end.")
+        
+        
+################## REPORT ##################
+    if len(config_mode_train) > 0 and len(config_mode_report) > 0:
+        print("Creating report...")
+        report( muzero, replay_buffer, epoch_pr, loss, reward)
+        print("Report created")
 
-    if str(sys.argv[-2]) == "play":
+################## INFERENCE_FROM_CHECKPOINT ##################
+    if len(config_mode_play) > 0:
+        print("Start play...")
         play_game_from_checkpoint(game_to_play = config["game"]["env"],
                                     
                                   model_tag = config["play_game_from_checkpoint"]["model_tag"],
                                   model_device = config["play_game_from_checkpoint"]["model_device"],
-                                  model_type = torch.float32,
+                                  model_type = compute_type,
                                     
                                   mcts_pb_c_base = config["monte_carlo_tree_search"]["pb_c_base"] , 
                                   mcts_pb_c_init = config["monte_carlo_tree_search"]["pb_c_init"], 
@@ -100,6 +161,54 @@ if __name__ == "__main__":
                                   slow_mo_in_second = config["play_game_from_checkpoint"]["slow_mo_in_second"],
                                   render = config["play_game_from_checkpoint"]["render"],
                                   verbose = config["play_game_from_checkpoint"]["verbose"])
+        print("End play")
+        
+    
+################## BENCHMARK_FROM_CHECKPOINT ##################
+    if len(config_mode_benchmark) > 0:
+        print("Start benchmark...")
+        number_of_trial = 100
+        cache_t,cache_r,cache_a,cache_p = [],[],[],[]
+        for _ in range(number_of_trial):
+            tag , reward , action, policy = play_game_from_checkpoint(game_to_play = config["game"]["env"],
+                                                
+                                            model_tag = config["play_game_from_checkpoint"]["model_tag"],
+                                            model_device = config["play_game_from_checkpoint"]["model_device"],
+                                            model_type = compute_type,
+                                                
+                                            mcts_pb_c_base = config["monte_carlo_tree_search"]["pb_c_base"] , 
+                                            mcts_pb_c_init = config["monte_carlo_tree_search"]["pb_c_init"], 
+                                            mcts_discount = config["monte_carlo_tree_search"]["discount"], 
+                                            mcts_root_dirichlet_alpha = config["monte_carlo_tree_search"]["root_dirichlet_alpha"], 
+                                            mcts_root_exploration_fraction = config["monte_carlo_tree_search"]["root_exploration_fraction"],
+                                            mcts_with_or_without_dirichlet_noise = config["play_game_from_checkpoint"]["mcts_with_or_without_dirichlet_noise"],
+                                            number_of_monte_carlo_tree_search_simulation = config["play_game_from_checkpoint"]["number_of_monte_carlo_tree_search_simulation"],
+                                                
+                                            gameplay_discount = config["gameplay"]["discount"],
+                                                
+                                            temperature = config["play_game_from_checkpoint"]["temperature"],
+                                            game_iter = config["play_game_from_checkpoint"]["game_iter"],
+                                                
+                                            slow_mo_in_second = 0,
+                                            render = False,
+                                            verbose = False,
+                                            benchmark = True) # Need benchmark True to return output
+            #could do it in one list or even wrap the play_game with benchmark but it reduce clarity
+            cache_t.append(tag)
+            cache_r.append(reward)
+            cache_a.append(action)
+            cache_p.append(policy)
 
 
+        benchmark(cache_t,
+                cache_r,
+                cache_a,
+                cache_p,
+                folder = "report",
+                verbose = True)
+        print("End benchmark")
 
+
+if __name__ == "__main__":
+    main(sys.argv[:])
+    
