@@ -1,6 +1,6 @@
 
 import sys
-import gym
+import gymnasium as gym
 
 from monte_carlo_tree_search import *
 from game import *
@@ -67,8 +67,7 @@ def main(cli_input):
         # # # good reference about it at : https://pytorch.org/docs/stable/notes/randomness.html
         np.random.seed(config["random_seed"]["np_random_seed"]) # set the random seed of numpy
         torch.manual_seed(config["random_seed"]["torch_manual_seed"]) # set the random seed of pytorch
-        try : env.seed(config["random_seed"]["env_seed"]) # set the random seed of gym env
-        except: pass
+
         # # # init/set muzero model for training and inference
         muzero = Muzero(model_structure = config["muzero"]["model_structure"], # 'vision_model' : will use rgb as observation , 'mlp_model' : will use game state as observation
                         observation_space_dimensions = env.observation_space, # dimension of the observation 

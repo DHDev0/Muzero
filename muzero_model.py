@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import os
 import json
-import gym
+import gymnasium as gym
 from neural_network_mlp_model import l1, l2, weights_init
 from neural_network_mlp_model import Loss_function
 import itertools

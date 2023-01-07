@@ -26,8 +26,6 @@ def play_game_ray(environment=None,
                   temperature=1):
 
     environment = copy.deepcopy(environment)
-    try: environment.env.seed(random.randint(0, 100000))
-    except: pass
     if environment.env.metadata['render_fps'] is None:
         environment.env.metadata['render_fps'] = 30
     counter = 0
@@ -56,8 +54,6 @@ def play_game(environment=None,
               temperature=1):
 
     environment = copy.deepcopy(environment)
-    try: environment.env.seed(random.randint(0, 100000))
-    except: pass
     if environment.env.metadata['render_fps'] is None:
         environment.env.metadata['render_fps'] = 30
     counter = 0
@@ -330,7 +326,7 @@ def play_game_from_checkpoint(game_to_play='CartPole-v1',
     import random
     import time
 
-    import gym
+    import gymnasium as gym
 
     from game import Game
     from monte_carlo_tree_search import (MinMaxStats, Monte_carlo_tree_search,

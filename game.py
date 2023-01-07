@@ -1,7 +1,7 @@
 import numpy as np
 import torchvision.transforms as transforms
 import torch
-
+import random
 # # # for more details on the Game class
 # # # refere to the pseudocode available at https://arxiv.org/src/1911.08265v2/anc/pseudocode.py
 
@@ -127,7 +127,7 @@ class Game():
                         iteration=0,
                         feedback=None):
         if iteration == 0: 
-            state = self.env.reset()
+            state = self.env.reset(seed=random.randint(0, 100000))
             if self.rgb_observation:
                 try:
                     state =  self.tuple_test_obs(self.render())
@@ -188,7 +188,7 @@ class Game():
         step_output = (self.env.step(self.action_map[selected_action]))
 
         # # # save game variable to a list to return them 
-        #contain [observation, reward, done, info] + [meta_data for som gym env]
+        #contain [observation, reward, done, info] + [meta_data for some gym env]
         step_val = [i for i in step_output]
 
         if self.rgb_observation : 
@@ -201,14 +201,16 @@ class Game():
         # # # save game variable to a list to return them 
         #contain [observation, reward, done, info] + [meta_data for som gym env]
         step_val = [observation]+[i for i in step_output[1:]]
-        # print(step_val[1:-1])
-        # # # done is the parameter of end game [False or True]
-        self.done = step_val[2]
+
         # # # save game variable to class storage
         self.observations.append(observation)
         self.rewards.append(step_val[1])
         self.policies.append(policy)
         self.action_history.append(action_onehot_encoded)
+        
+        # # # done is the parameter of end game [False or True]
+        self.done = step_val[2] if self.limit_of_game_play != len(self.observations) else False
+        
         return step_val
     
     def close(self):

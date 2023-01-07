@@ -1,11 +1,13 @@
 # Muzero
 
-Pytorch Implementation of MuZero for OpenAI gym environment. It should support any <Discrete> ,<Box> or <Box2D> configuration for the observation space and action space.
+Pytorch Implementation of MuZero for Gymnasium environment. It should support any <Discrete> ,<Box> or <Box2D> configuration for the observation space and action space.
 
 I documented the code as closely as possible next to the [Muzero paper](https://arxiv.org/abs/1911.08265).
 ( You will find two types of comments: self explain variables and comments within the code)
 
-P.S. Gym class Discrete, Box, and Box2D refer to different types of observation or action spaces in a simulation. Discrete refers to a 1D array of integers, Box refers to a 1D array of floating point numbers, and Box2D refers to a multi-dimensional array of integers or floating point numbers.
+P.S. Gymnasium class Discrete, Box, and Box2D refer to different types of observation or action spaces in a simulation. Discrete refers to a 1D array of integers, Box refers to a 1D array of floating point numbers, and Box2D refers to a multi-dimensional array of integers or floating point numbers.
+
+**small update to [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) 0.27.0 (fork continuation of gym)
 
 
 Table of contents
@@ -46,7 +48,7 @@ If you experience some difficulty refer to the first cell [Tutorial](https://git
 Docker
 ------
  
-Build image: (building time: 1 h , memory consumption: 8.64 GB)
+Build image: (building time: 22 min , memory consumption: 8.75 GB)
 ~~~bash
 docker build -t muzero .
 ~~~ 
@@ -90,7 +92,7 @@ Library :
 * torch 1.13.0
 * torchvision 0.14.0
 * ray 2.0.1 
-* gym 0.26.2
+* gymnasium 0.27.0
 * matplotlib >=3.0
 * numpy 1.21.5
 
@@ -150,7 +152,7 @@ Features
 
 [x] implemented , [ ] unimplemented
 
-* [x] Work for any Gym environments/games. (any combination of continous or/and discrete action and observation space)
+* [x] Work for any Gymnasium environments/games. (any combination of continous or/and discrete action and observation space)
 * [x] MLP network for game state observation. (Multilayer perceptron)
 * [x] LSTM network for game state observation. (LSTM)
 * [x] Transformer decoder for game state observation. (Transformer)
@@ -172,6 +174,7 @@ Features
 * [x] Commented with link/page to the paper.
 * [x] Support : Windows , Linux , MacOS.
 * [X] Fix pytorch linear layer initialization. (refer to : https://tinyurl.com/ykrmcnce)
+* [x] Support of [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) 0.27.0
 * [ ] Two player mode and more. (can't generalize a non-standardized field. you can implement it by knowing the cycle of player in play in the mcts)
 * [ ] Hyperparameter search. (pseudo-code available in self_play.py)
 * [ ] Unittest the codebase and assert argument bound.
@@ -181,7 +184,7 @@ Features
 How to make your own custom gym environment?
 ================================================
 
-Refer to the [Gym documentation](https://www.gymlibrary.dev/content/environment_creation/)
+Refer to the [Gym documentation](https://gymnasium.farama.org/tutorials/environment_creation/)
 
 You will be able to call your custom gym environment in muzero after you register it in gym.
 
