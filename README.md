@@ -172,7 +172,7 @@ Features
 * [x] Commented with link/page to the paper.
 * [x] Support : Windows , Linux , MacOS.
 * [X] Fix pytorch linear layer initialization. (refer to : https://tinyurl.com/ykrmcnce)
-* [-] Two player mode and more. (can't generalize a non-standardized field. you can implement it by knowing the cycle of player in play in the mcts)
+* [ ] Two player mode and more. (can't generalize a non-standardized field. you can implement it by knowing the cycle of player in play in the mcts)
 * [ ] Hyperparameter search. (pseudo-code available in self_play.py)
 * [ ] Unittest the codebase and assert argument bound.
 * [ ] Training and deploy on cloud cluster using Kubeflow, Airflow or Ray for aws,gcp and azure.
