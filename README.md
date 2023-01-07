@@ -74,7 +74,7 @@ Option meaning:
 
 Stop the container:
 ~~~bash
-docker stop muzero
+docker stop $(docker ps -q --filter ancestor=muzero)
 ~~~ 
 
 Delete the container:
