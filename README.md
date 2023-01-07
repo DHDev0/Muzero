@@ -117,32 +117,32 @@ cd Muzero
 ~~~
 Training :
 ~~~bash 
-python muzero_cli.py train config/cli_cartpole_config.json
+python muzero_cli.py train config/experiment_133_config.json
 ~~~  
 
 Training with report
 ~~~bash
-python muzero_cli.py train report config/cli_cartpole_config.json
+python muzero_cli.py train report config/experiment_133_config.json
 ~~~  
 
 Inference (play game with specific model) :
 ~~~bash 
-python muzero_cli.py train play config/cli_cartpole_config.json
+python muzero_cli.py train play config/experiment_133_config.json
 ~~~ 
 
 Training and Inference :
 ~~~bash 
-python muzero_cli.py train play config/cli_cartpole_config.json
+python muzero_cli.py train play config/experiment_133_config.json
 ~~~  
 
 Benchmark model :
 ~~~bash
-python muzero_cli.py benchmark config/cli_cartpole_config.json
+python muzero_cli.py benchmark config/experiment_133_config.json
 ~~~ 
 
 Training + Report + Inference + Benchmark :
 ~~~python 
-python muzero_cli.py train report play benchmark play config/cli_cartpole_config.json
+python muzero_cli.py train report play benchmark play config/experiment_133_config.json
 ~~~  
 
 Features
