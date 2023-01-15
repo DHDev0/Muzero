@@ -1,6 +1,6 @@
 # Muzero
 
-Pytorch Implementation of MuZero for Gymnasium environment. It should support any <Discrete> ,<Box> or <Box2D> configuration for the observation space and action space.
+Pytorch Implementation of MuZero for Gymnasium environment. It should support any Discrete ,Box or Box2D configuration for the observation space and action space.
 
 I documented the code as closely as possible next to the [Muzero paper](https://arxiv.org/abs/1911.08265).
 ( You will find two types of comments: self explain variables and comments within the code)
