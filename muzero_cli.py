@@ -14,15 +14,15 @@ def main(cli_input):
     #lower case cli argument
     cli_input_to_lower_case = list(map(lambda x: x.lower(), cli_input))
     # find if one config file has been provide in clie
-    config_directory_and_file =  filter(lambda s: 'config' in s, cli_input)
+    config_directory_and_file =  list(filter(lambda s: 'config' in s, cli_input))
     # check if train argument has been provide in the cli command
-    config_mode_train =  filter(lambda s: 'train' in s, cli_input_to_lower_case)
+    config_mode_train =  list(filter(lambda s: 'train' in s, cli_input_to_lower_case))
     # check if play argument has been provide in the cli command
-    config_mode_play =  filter(lambda s: 'play' in s, cli_input_to_lower_case)
+    config_mode_play =  list(filter(lambda s: 'play' in s, cli_input_to_lower_case))
     # check if report argument has been provide in the cli command
-    config_mode_report =  filter(lambda s: 'report' in s, cli_input_to_lower_case)
+    config_mode_report =  list(filter(lambda s: 'report' in s, cli_input_to_lower_case))
     # check if benchmark argument has been provide in the cli command
-    config_mode_benchmark =  filter(lambda s: 'benchmark' in s, cli_input_to_lower_case)
+    config_mode_benchmark =  list(filter(lambda s: 'benchmark' in s, cli_input_to_lower_case))
 
     #raise error/explain if config path is not provide
     if len(config_directory_and_file) == 0 : 
