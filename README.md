@@ -175,7 +175,7 @@ Features
 * [x] Support : Windows , Linux , MacOS.
 * [X] Fix pytorch linear layer initialization. (refer to : https://tinyurl.com/ykrmcnce)
 * [x] Support of [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) 0.27.0
-* [ ] Two player mode and more. (can't generalize a non-standardized field. you can implement it by knowing the cycle of player in play in the mcts)
+* [ ] Two player mode and more. 
 * [ ] Hyperparameter search. (pseudo-code available in self_play.py)
 * [ ] Unittest the codebase and assert argument bound.
 * [ ] Training and deploy on cloud cluster using Kubeflow, Airflow or Ray for aws,gcp and azure.
