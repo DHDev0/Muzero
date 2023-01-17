@@ -247,6 +247,7 @@ def learning_cycle(number_of_iteration=10000,
         # Bool condition
         model_save_condition = reward[-1] == max(reward)
         if model_save_condition is True: 
+            print(" "*1000,end='\r')
             print("save model with : ", reward[-1]," reward")
         muzero_model.save_model(
             directory="model_checkpoint", 
@@ -264,7 +265,9 @@ def learning_cycle(number_of_iteration=10000,
 
         prompt_feedback = f'EPOCH {ep} || selfplay reward: {reward[-1]} || training loss: { loss[-1] }||'
         epoch_pr.append(prompt_feedback)
-        if verbose: print(prompt_feedback)
+        if verbose: 
+            print(" "*1000,end='\r')
+            print(prompt_feedback,end='\r')
     
     configuration = {'number_of_iteration' : number_of_iteration,
                      'number_of_self_play_before_training' : number_of_self_play_before_training,
