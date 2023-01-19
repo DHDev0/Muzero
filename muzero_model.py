@@ -439,9 +439,12 @@ class Muzero:
     def reshape_batch(self, batches):
         X, Y = [], []
 
+        # # # Batches
+        # # # (bacth , importance_sampling_ratio , game_pos)
+        batch = batches[0]
         # # # Batch :
         # # # [([observation numpy array], [action onehot encoded numpy array[] , list[value, reward, policy])...]
-        batch = batches[0]
+        
         # # observation
         # batch of observation (state)
         X.append(torch.cat(tuple(b[0] for b in batch), dim=0).type(
