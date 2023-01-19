@@ -137,7 +137,18 @@ class Game():
                 state = self.flatten_state(self.tuple_test_obs(state))
         else:
             state = feedback[0]
+        self.feedback_state = state
         return state
+    
+    def step(self,action):
+        try: 
+            next_step = (self.env.step(action))
+        except:
+            obs = self.feedback_state
+            reward = min(-len(self.rewards),-self.limit_of_game_play,-1)
+            done = self.done
+            next_step = (obs,reward,done)
+        return next_step
 
     
     def store_search_statistics(self, root):
@@ -185,7 +196,7 @@ class Game():
         action_onehot_encoded[selected_action] = 1
 
         # # # apply mouve and return variable of the env
-        step_output = (self.env.step(self.action_map[selected_action]))
+        step_output = self.step(self.action_map[selected_action])
 
         # # # save game variable to a list to return them 
         #contain [observation, reward, done, info] + [meta_data for some gym env]
