@@ -7,7 +7,7 @@ I documented the code as closely as possible next to the [Muzero paper](https://
 
 P.S. Gymnasium class Discrete, Box, and Box2D refer to different types of observation or action spaces in a simulation. Discrete refers to a 1D array of integers, Box refers to a 1D array of floating point numbers, and Box2D refers to a multi-dimensional array of integers or floating point numbers.
 
-**small update to [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) 0.27.0 (fork continuation of gym)
+[MuZero](https://github.com/DHDev0/Muzero) -> [MuZero Unplugged](https://github.com/DHDev0/Muzero-unplugged) -> [Stochastic MuZero](https://github.com/DHDev0/Stochastic-muzero)
 
 
 Table of contents
