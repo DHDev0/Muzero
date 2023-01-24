@@ -178,7 +178,6 @@ Features
 * [x] Support of [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) 0.27.0
 * [ ] Two player mode and more. 
 * [ ] Hyperparameter search. (pseudo-code available in self_play.py)
-* [ ] Unittest the codebase and assert argument bound.
 * [ ] Training and deploy on cloud cluster using Kubeflow, Airflow or Ray for aws,gcp and azure.
 
 
